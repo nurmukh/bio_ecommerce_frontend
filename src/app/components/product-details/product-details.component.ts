@@ -10,7 +10,7 @@ import { ProductService } from 'src/app/services/product.service';
 })
 export class ProductDetailsComponent implements OnInit {
 
-  product: Product;
+  product: Product = new Product();
 
   
   constructor(private productService: ProductService,
@@ -26,7 +26,7 @@ export class ProductDetailsComponent implements OnInit {
     const theProductId = +this.route.snapshot.paramMap.get('id');
     this.productService.getProduct(theProductId).subscribe(
       data => {
-        this.productService = data;
+        this.product = data;
               }
     )
   }
