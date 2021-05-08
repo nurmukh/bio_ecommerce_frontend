@@ -34,14 +34,14 @@ export class ProductService {
      
      }
      
-     getProductList(theCategoryId: number): Observable<Product[]>{
+     /* getProductList(theCategoryId: number): Observable<Product[]>{
        
        
        const searchUrl = `${this.baseUrl}/search/findByCategoryId?id=${theCategoryId}`;
        
        return this.getProducts(searchUrl);  
        
-      }
+      } */
       
       /* searchProducts(theKeyword: string): Observable<Product[]> {
         
