@@ -1,23 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { CartItem } from '../common/cart-item';
+import { CartItem as CartItems } from '../common/cart-item';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
 
-  cartItems: CartItem[] = [];
+  cartItems: CartItems[] = [];
 
   totalPrice: Subject<number> = new Subject<number>();
   totalQuantity: Subject<number> = new Subject<number>();
 
   constructor() { }
 
-  addToCart(theCartItem: CartItem) {
+  addToCart(theCartItem: CartItems) {
     // check if we already have the item in our car
     let alreadyExistsInCart: boolean = false;
-    let existingCartItem: CartItem = undefined;
+    let existingCartItem: CartItems = undefined;
 
     if (this.cartItems.length > 0) {
       // find the item in the cart based on item id
