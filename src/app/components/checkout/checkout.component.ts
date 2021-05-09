@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MyShopFormService } from 'src/app/services/my-shop-form.service';
 
 @Component({
   selector: 'app-checkout',
@@ -12,8 +13,12 @@ export class CheckoutComponent implements OnInit {
 
   totalQuantity: number = 0;
   totalPrice: number = 0;
-  
-  constructor(private formBuilder: FormBuilder) { }
+
+  creditCardMonths: number[] = [];
+  creditCardYears: number[] = [];
+
+  constructor(private formBuilder: FormBuilder,
+    private myShopService: MyShopFormService) { }
 
   ngOnInit(): void {
     this.checkoutFormGroup = this.formBuilder.group(
@@ -47,17 +52,58 @@ export class CheckoutComponent implements OnInit {
         }),
       }
     );
+      // populate credit card months
+
+      const startMonth: number = new Date().getMonth() + 1;
+      console.log("startMonth: " + startMonth);
+      this.myShopService.getCreditCardMonths(startMonth).subscribe(
+        data=> {
+          console.log("Retrieved credit card months: " + JSON.stringify(data));
+          this.creditCardMonths = data;
+        }
+      );
+      // populate credit card years
+
+      this.myShopService.getCreditYear().subscribe(
+        data=> {
+          console.log(" Retrieved credit card years: " + JSON.stringify(data));
+          this.creditCardYears = data;
+        }
+      );
+
   }
-  copyShippingAddressToBillingAddress(event){
+
+  copyShippingAddressToBillingAddress(event) {
     if (event.target.checked) {
-        this.checkoutFormGroup.controls.billingAddress
-              .setValue(this.checkoutFormGroup.controls.shippingAddress.value);
-    } else{
+      this.checkoutFormGroup.controls.billingAddress
+        .setValue(this.checkoutFormGroup.controls.shippingAddress.value);
+    } else {
       this.checkoutFormGroup.controls.billingAddress.reset();
     }
   }
-  onSubmit(){
+  onSubmit() {
     console.log("Handling the submit button");
     console.log(this.checkoutFormGroup.get('customer').value);
+  }
+
+  handleMonthsAndYears(){
+    const creditCardFormGroup = this.checkoutFormGroup.get('creditCard');
+    const currentYear: number = new Date().getFullYear();
+    const selectedYear: number = Number(creditCardFormGroup.value.expirationYear);
+
+    let startMonth: number;
+
+    if (currentYear === selectedYear) {
+        startMonth = new Date().getMonth() + 1;
+    }
+      else{
+        startMonth = 1;
+    }
+      this.myShopService.getCreditCardMonths(startMonth).subscribe(
+        data=> {
+          this.creditCardMonths = data;
+        }
+      );
+
   }
 }
